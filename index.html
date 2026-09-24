@@ -391,6 +391,20 @@ form.entry-form {
 
 /* ---------- Feuille de mise au net ---------- */
 
+.profile-block {
+  background: var(--paper-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 14px 2px;
+  margin-bottom: 14px;
+}
+
+.sheet-header .grid-2.student-line {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
 .sheet-picker {
   margin-bottom: 14px;
 }
@@ -499,7 +513,7 @@ form.entry-form {
 
 @media print {
   body::before { display: none; }
-  header.top, nav.tabs, main > section:not(#view-feuille), .filter-row, .sheet-actions, .sheet-picker {
+  header.top, nav.tabs, main > section:not(#view-feuille), .filter-row, .sheet-actions, .sheet-picker, .profile-block {
     display: none !important;
   }
   #view-feuille { display: block !important; }
@@ -578,6 +592,11 @@ form.entry-form {
           <input type="text" id="f-livre" name="livre" placeholder="Ex. Grammaire CM2" required>
         </div>
 
+        <div class="field">
+          <label for="f-matiere">Matière</label>
+          <input type="text" id="f-matiere" name="matiere" placeholder="Ex. Français">
+        </div>
+
         <div class="field-row">
           <div class="field">
             <label for="f-page">Page</label>
@@ -614,6 +633,29 @@ form.entry-form {
     <section id="view-feuille" class="view">
       <h2 class="view-title">Feuille de mise au net</h2>
 
+      <div class="profile-block">
+        <div class="field-row">
+          <div class="field">
+            <label for="p-nom">Nom</label>
+            <input type="text" id="p-nom" placeholder="Nom">
+          </div>
+          <div class="field">
+            <label for="p-prenom">Prénom</label>
+            <input type="text" id="p-prenom" placeholder="Prénom">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="p-classe">Classe</label>
+            <input type="text" id="p-classe" placeholder="Ex. CM2">
+          </div>
+          <div class="field">
+            <label for="p-ecole">École</label>
+            <input type="text" id="p-ecole" placeholder="Nom de l'école">
+          </div>
+        </div>
+      </div>
+
       <div class="sheet-picker">
         <select id="sheet-select">
           <option value="">— Choisir un devoir —</option>
@@ -622,8 +664,15 @@ form.entry-form {
 
       <div class="sheet">
         <div class="sheet-header">
+          <div class="grid-2 student-line">
+            <div><span class="lbl">Nom</span><span class="val" id="sheet-nom">—</span></div>
+            <div><span class="lbl">Prénom</span><span class="val" id="sheet-prenom">—</span></div>
+            <div><span class="lbl">Classe</span><span class="val" id="sheet-classe">—</span></div>
+            <div><span class="lbl">École</span><span class="val" id="sheet-ecole">—</span></div>
+          </div>
           <div class="grid-2">
             <div><span class="lbl">Livre</span><span class="val" id="sheet-livre">—</span></div>
+            <div><span class="lbl">Matière</span><span class="val" id="sheet-matiere">—</span></div>
             <div><span class="lbl">Page</span><span class="val" id="sheet-page">—</span></div>
             <div><span class="lbl">Professeur</span><span class="val" id="sheet-prof">—</span></div>
             <div><span class="lbl">À remettre le</span><span class="val" id="sheet-date">—</span></div>
@@ -792,6 +841,13 @@ form.entry-form {
     h3.textContent = entry.livre || "(sans titre)";
     card.appendChild(h3);
 
+    if (entry.matiere) {
+      const metaMatiere = document.createElement("div");
+      metaMatiere.className = "meta";
+      metaMatiere.innerHTML = `Matière : <strong>${escapeHtml(entry.matiere)}</strong>`;
+      card.appendChild(metaMatiere);
+    }
+
     const metaPage = document.createElement("div");
     metaPage.className = "meta";
     metaPage.innerHTML = `Page : <strong>${escapeHtml(entry.page || "—")}</strong>`;
@@ -920,6 +976,7 @@ form.entry-form {
       id: "e" + Date.now() + Math.random().toString(36).slice(2, 7),
       type: currentType,
       livre: fd.get("livre").trim(),
+      matiere: fd.get("matiere").trim(),
       page: fd.get("page").trim(),
       dateRemise: fd.get("dateRemise"),
       professeur: fd.get("professeur").trim(),
@@ -945,9 +1002,67 @@ form.entry-form {
   const sheetBody = document.getElementById("sheet-body");
   const sheetTitle = document.getElementById("sheet-title");
   const sheetMetaLivre = document.getElementById("sheet-livre");
+  const sheetMetaMatiere = document.getElementById("sheet-matiere");
   const sheetMetaPage = document.getElementById("sheet-page");
   const sheetMetaProf = document.getElementById("sheet-prof");
   const sheetMetaDate = document.getElementById("sheet-date");
+  const sheetNom = document.getElementById("sheet-nom");
+  const sheetPrenom = document.getElementById("sheet-prenom");
+  const sheetClasse = document.getElementById("sheet-classe");
+  const sheetEcole = document.getElementById("sheet-ecole");
+
+  /* --- Profil élève (Nom / Prénom / Classe / École), partagé par toutes les feuilles --- */
+
+  const PROFILE_KEY = "carnet-lecons-profil-v1";
+
+  function loadProfile() {
+    try {
+      const raw = localStorage.getItem(PROFILE_KEY);
+      return raw ? JSON.parse(raw) : { nom: "", prenom: "", classe: "", ecole: "" };
+    } catch (e) {
+      return { nom: "", prenom: "", classe: "", ecole: "" };
+    }
+  }
+
+  function saveProfile(profile) {
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    } catch (e) {
+      console.error("Profil non enregistré", e);
+    }
+  }
+
+  const profileInputs = {
+    nom: document.getElementById("p-nom"),
+    prenom: document.getElementById("p-prenom"),
+    classe: document.getElementById("p-classe"),
+    ecole: document.getElementById("p-ecole")
+  };
+
+  function refreshStudentHeader() {
+    const p = loadProfile();
+    sheetNom.textContent = p.nom || "—";
+    sheetPrenom.textContent = p.prenom || "—";
+    sheetClasse.textContent = p.classe || "—";
+    sheetEcole.textContent = p.ecole || "—";
+  }
+
+  (function initProfile() {
+    const p = loadProfile();
+    profileInputs.nom.value = p.nom || "";
+    profileInputs.prenom.value = p.prenom || "";
+    profileInputs.classe.value = p.classe || "";
+    profileInputs.ecole.value = p.ecole || "";
+    Object.entries(profileInputs).forEach(([key, input]) => {
+      input.addEventListener("input", () => {
+        const current = loadProfile();
+        current[key] = input.value;
+        saveProfile(current);
+        refreshStudentHeader();
+      });
+    });
+    refreshStudentHeader();
+  })();
 
   function populateSheetPicker() {
     const devoirs = entries.filter((e) => e.type === "devoir");
@@ -966,9 +1081,11 @@ form.entry-form {
 
   function loadSheet(id) {
     const entry = entries.find((e) => e.id === id);
+    refreshStudentHeader();
     if (!entry) {
       sheetTitle.textContent = "Feuille libre";
       sheetMetaLivre.textContent = "—";
+      sheetMetaMatiere.textContent = "—";
       sheetMetaPage.textContent = "—";
       sheetMetaProf.textContent = "—";
       sheetMetaDate.textContent = "—";
@@ -978,6 +1095,7 @@ form.entry-form {
     }
     sheetTitle.textContent = entry.livre || "Devoir";
     sheetMetaLivre.textContent = entry.livre || "—";
+    sheetMetaMatiere.textContent = entry.matiere || "—";
     sheetMetaPage.textContent = entry.page || "—";
     sheetMetaProf.textContent = entry.professeur || "—";
     sheetMetaDate.textContent = fmtDate(entry.dateRemise);

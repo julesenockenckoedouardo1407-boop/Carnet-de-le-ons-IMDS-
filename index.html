@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carnet de leçons — Jules Enock</title>
+<meta name="description" content="Carnet numérique pour noter les leçons et devoirs, suivre leur statut et préparer la mise au net.">
+<meta name="theme-color" content="#2E4374">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carnet de leçons">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="top">
+    <h1>Carnet de leçons</h1>
+    <p>Jules Enock</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-view="accueil" class="active">Mon carnet</button>
+    <button data-view="ajouter">Ajouter</button>
+    <button data-view="feuille">Feuille</button>
+    <button data-view="apropos">À propos</button>
+  </nav>
+
+  <main>
+
+    <!-- ===== Accueil : liste des leçons / devoirs ===== -->
+    <section id="view-accueil" class="view active">
+      <h2 class="view-title">Mes leçons et devoirs</h2>
+
+      <div class="filter-row">
+        <button data-filter="tous" class="active">Tous</button>
+        <button data-filter="lecons">Leçons</button>
+        <button data-filter="devoirs">Devoirs</button>
+        <button data-filter="en-retard">En retard</button>
+      </div>
+
+      <div id="entries-list"></div>
+
+      <div id="empty-state" class="empty-state" style="display:none;">
+        <div class="big">Le carnet est vide</div>
+        <p>Ajoute ta première leçon ou ton premier devoir depuis l'onglet « Ajouter ».</p>
+      </div>
+    </section>
+
+    <!-- ===== Ajouter ===== -->
+    <section id="view-ajouter" class="view">
+      <h2 class="view-title">Ajouter une leçon ou un devoir</h2>
+
+      <form id="entry-form" class="entry-form">
+        <div class="field">
+          <label>Type</label>
+          <div class="type-toggle">
+            <button type="button" data-type="lecon" class="active lecon">Leçon</button>
+            <button type="button" data-type="devoir">Devoir</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-livre">Livre</label>
+          <input type="text" id="f-livre" name="livre" placeholder="Ex. Grammaire CM2" required>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-page">Page</label>
+            <input type="text" id="f-page" name="page" placeholder="Ex. 42">
+          </div>
+          <div class="field">
+            <label for="f-heure">Heure du cours</label>
+            <input type="time" id="f-heure" name="heure">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-date">À remettre le</label>
+            <input type="date" id="f-date" name="dateRemise">
+          </div>
+          <div class="field">
+            <label for="f-prof">Professeur</label>
+            <input type="text" id="f-prof" name="professeur" placeholder="Nom du professeur">
+          </div>
+        </div>
+
+        <div class="field" id="field-notes-prof">
+          <label for="f-notes">Notes du professeur (si le devoir ou la leçon s'y trouve)</label>
+          <textarea id="f-notes" name="notesProf" placeholder="Recopie ici ce que le professeur a noté"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">Ajouter au carnet</button>
+        <div class="form-msg" id="form-msg"></div>
+      </form>
+    </section>
+
+    <!-- ===== Feuille de mise au net ===== -->
+    <section id="view-feuille" class="view">
+      <h2 class="view-title">Feuille de mise au net</h2>
+
+      <div class="sheet-picker">
+        <select id="sheet-select">
+          <option value="">— Choisir un devoir —</option>
+        </select>
+      </div>
+
+      <div class="sheet">
+        <div class="sheet-header">
+          <div class="grid-2">
+            <div><span class="lbl">Livre</span><span class="val" id="sheet-livre">—</span></div>
+            <div><span class="lbl">Page</span><span class="val" id="sheet-page">—</span></div>
+            <div><span class="lbl">Professeur</span><span class="val" id="sheet-prof">—</span></div>
+            <div><span class="lbl">À remettre le</span><span class="val" id="sheet-date">—</span></div>
+          </div>
+          <div class="title-field" id="sheet-title">Feuille libre</div>
+        </div>
+        <div class="sheet-body" id="sheet-body" contenteditable="true" spellcheck="true"></div>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="button" class="btn-secondary" id="sheet-save">Enregistrer le brouillon</button>
+        <button type="button" class="btn-primary" id="sheet-print">Imprimer / PDF</button>
+      </div>
+      <div class="form-msg" id="sheet-save-msg"></div>
+    </section>
+
+    <!-- ===== À propos ===== -->
+    <section id="view-apropos" class="view">
+      <h2 class="view-title">À propos</h2>
+      <div class="about-card">
+        <div class="logo-mark">Carnet de leçons</div>
+        <p>Créé par maître Jules Enock, pour aider chaque élève à suivre ses leçons et devoirs, du cahier de texte jusqu'à la feuille de mise au net.</p>
+        <div class="contact">Contact : +509 4040 9680</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

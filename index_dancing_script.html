@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carnet de leçons — Jules Enock</title>
+<meta name="description" content="Carnet numérique pour noter les leçons et devoirs, suivre leur statut et préparer la mise au net.">
+<meta name="theme-color" content="#2E4374">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carnet de leçons">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap");
+:root {
+  --paper: #FAF6ED;
+  --paper-alt: #F3EDDD;
+  --rule-blue: #C9D6E8;
+  --margin-red: #B33A3A;
+  --ink: #263241;
+  --ink-soft: #5B6472;
+  --accent-blue: #2E4374;
+  --accent-blue-dark: #1F2E52;
+  --accent-green: #2F6F4E;
+  --accent-green-bg: #E4EFE8;
+  --accent-amber: #B8792F;
+  --accent-amber-bg: #F5EBDA;
+  --accent-red: #B33A3A;
+  --accent-red-bg: #F6E4E2;
+  --border: #DCD3BE;
+  --shadow: 0 2px 10px rgba(38, 50, 65, 0.08);
+  --radius: 10px;
+  --font-head: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  --font-body: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 35px,
+    var(--rule-blue) 36px
+  );
+  opacity: 0.35;
+  z-index: 0;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Header ---------- */
+
+header.top {
+  background: var(--accent-blue);
+  color: var(--paper);
+  padding: 18px 20px 14px;
+  padding-top: calc(18px + env(safe-area-inset-top, 0px));
+  border-bottom: 4px solid var(--margin-red);
+}
+
+header.top h1 {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0;
+  letter-spacing: 0.2px;
+}
+
+header.top p {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  color: #D7DEEC;
+}
+
+/* ---------- Tab navigation (notebook tabs) ---------- */
+
+nav.tabs {
+  display: flex;
+  background: var(--paper-alt);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+nav.tabs button {
+  flex: 1 0 auto;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 12px 10px 10px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+nav.tabs button.active {
+  color: var(--accent-blue);
+  border-bottom-color: var(--margin-red);
+  background: var(--paper);
+}
+
+main {
+  flex: 1;
+  padding: 18px 18px 32px;
+}
+
+section.view { display: none; }
+section.view.active { display: block; }
+
+h2.view-title {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  color: var(--accent-blue-dark);
+  margin: 0 0 14px;
+  padding-left: 12px;
+  border-left: 3px solid var(--margin-red);
+}
+
+/* ---------- Cards / list ---------- */
+
+.entry-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--margin-red);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 14px 12px;
+  margin-bottom: 14px;
+}
+
+.entry-card .row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.entry-card .type-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--accent-blue);
+  color: var(--paper);
+  white-space: nowrap;
+}
+.entry-card .type-pill.devoir { background: var(--accent-amber); }
+
+.entry-card h3 {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  margin: 6px 0 2px;
+  color: var(--ink);
+}
+
+.entry-card .meta {
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  margin: 2px 0;
+}
+
+.entry-card .meta strong { color: var(--ink); }
+
+.entry-card .prof-notes {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: var(--paper-alt);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.status-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 9px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: #EFEAE0;
+  color: var(--ink-soft);
+}
+
+.status-badge.on.ok { background: var(--accent-green-bg); color: var(--accent-green); border-color: var(--accent-green); }
+.status-badge.on.warn { background: var(--accent-amber-bg); color: var(--accent-amber); border-color: var(--accent-amber); }
+.status-badge.on.bad { background: var(--accent-red-bg); color: var(--accent-red); border-color: var(--accent-red); }
+
+.entry-card .bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  gap: 8px;
+}
+
+.note-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+}
+
+.note-field input {
+  width: 52px;
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.card-actions { display: flex; gap: 8px; }
+
+.icon-btn {
+  border: 1px solid var(--border);
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 5px 9px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  color: var(--ink-soft);
+}
+.icon-btn:hover { border-color: var(--accent-blue); color: var(--accent-blue); }
+.icon-btn.danger:hover { border-color: var(--accent-red); color: var(--accent-red); }
+
+/* ---------- Empty state ---------- */
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--ink-soft);
+}
+.empty-state .big { font-family: var(--font-head); font-size: 1.1rem; color: var(--accent-blue-dark); margin-bottom: 6px; }
+
+/* ---------- Filters ---------- */
+
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.filter-row button {
+  border: 1px solid var(--border);
+  background: var(--paper);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.filter-row button.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: var(--paper);
+}
+
+/* ---------- Form ---------- */
+
+form.entry-form {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.field { margin-bottom: 14px; }
+
+.field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent-blue-dark);
+  margin-bottom: 5px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  background: #FFFDF8;
+  color: var(--ink);
+}
+
+.field textarea { resize: vertical; min-height: 64px; }
+
+.field-row { display: flex; gap: 10px; }
+.field-row .field { flex: 1; }
+
+.type-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.type-toggle button {
+  flex: 1;
+  border: none;
+  background: var(--paper);
+  padding: 9px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.type-toggle button.active.lecon { background: var(--accent-blue); color: var(--paper); }
+.type-toggle button.active.devoir { background: var(--accent-amber); color: var(--paper); }
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: var(--accent-blue);
+  color: var(--paper);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.btn-primary:active { background: var(--accent-blue-dark); }
+
+.btn-secondary {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.form-msg {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  font-weight: 600;
+  margin-top: 10px;
+  min-height: 1.2em;
+}
+
+/* ---------- Feuille de mise au net ---------- */
+
+.profile-block {
+  background: var(--paper-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 14px 2px;
+  margin-bottom: 14px;
+}
+
+.sheet-header .grid-2.student-line {
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.sheet-picker {
+  margin-bottom: 14px;
+}
+.sheet-writing-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: var(--paper-alt);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.sheet-writing-controls label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-blue-dark);
+  white-space: nowrap;
+}
+.sheet-writing-controls select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: #FFFDF8;
+  color: var(--ink);
+  font-size: 0.88rem;
+}
+.sheet-writing-preview {
+  font-family: "Dancing Script", cursive;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.sheet-body.writing-dancing {
+  font-family: "Dancing Script", cursive !important;
+  font-size: 1.32rem !important;
+  font-weight: 500;
+  letter-spacing: 0.15px;
+}
+.sheet-body.writing-school {
+  font-family: var(--font-head) !important;
+  font-size: 1rem !important;
+  font-weight: 400;
+}
+.sheet-body.writing-keyboard {
+  font-family: var(--font-body) !important;
+  font-size: 1rem !important;
+  font-weight: 400;
+}
+@media (max-width: 520px) {
+  .sheet-writing-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .sheet-writing-controls select {
+    width: 100%;
+  }
+}
+
+.sheet-picker select {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #FFFDF8;
+  font-size: 0.9rem;
+}
+
+.sheet {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.sheet-header {
+  padding: 16px 16px 10px;
+  border-bottom: 2px solid var(--margin-red);
+}
+
+.sheet-header .grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 14px;
+  font-size: 0.85rem;
+}
+
+.sheet-header .grid-2 div span.lbl {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  display: block;
+}
+.sheet-header .grid-2 div span.val {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sheet-header .title-field {
+  margin-top: 8px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--accent-blue-dark);
+}
+
+.sheet-body {
+  position: relative;
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0, transparent 27px, var(--rule-blue) 28px),
+    linear-gradient(to right, var(--margin-red) 0, var(--margin-red) 2px, transparent 2px);
+  background-position: 0 0, 40px 0;
+  background-repeat: repeat, no-repeat;
+  background-size: 100% 28px, auto 100%;
+  min-height: 420px;
+  padding: 14px 16px 14px 52px;
+}
+
+.sheet-body[contenteditable="true"] {
+  outline: none;
+  font-family: var(--font-head);
+  font-size: 1rem;
+  line-height: 28px;
+  color: var(--ink);
+}
+
+.sheet-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.sheet-actions button { flex: 1; }
+
+/* ---------- About ---------- */
+
+.about-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--margin-red);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  text-align: center;
+}
+.about-card .logo-mark {
+  font-family: var(--font-head);
+  font-size: 1.3rem;
+  color: var(--accent-blue-dark);
+  font-weight: 700;
+}
+.about-card p { color: var(--ink-soft); font-size: 0.9rem; }
+.about-card .contact {
+  margin-top: 14px;
+  padding: 10px;
+  background: var(--paper-alt);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* ---------- Print styles ---------- */
+
+@media print {
+  body::before { display: none; }
+  header.top, nav.tabs, main > section:not(#view-feuille), .filter-row, .sheet-actions, .sheet-picker, .profile-block {
+    display: none !important;
+  }
+  #view-feuille { display: block !important; }
+  #view-feuille .view-title { display: none; }
+  .sheet { box-shadow: none; border: none; }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1E1B16;
+    --paper-alt: #262219;
+    --ink: #EDE6D6;
+    --ink-soft: #B8AF9C;
+    --border: #3A3428;
+    --rule-blue: #33455F;
+  }
+  .sheet, .sheet-header, .field input, .field select, .field textarea {
+    background: #24211A;
+    color: var(--ink);
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="top">
+    <h1>Carnet de leçons</h1>
+    <p>Jules Enock</p>
+  </header>
+
+  <nav class="tabs">
+    <button data-view="accueil" class="active">Mon carnet</button>
+    <button data-view="ajouter">Ajouter</button>
+    <button data-view="feuille">Feuille</button>
+    <button data-view="apropos">À propos</button>
+  </nav>
+
+  <main>
+
+    <!-- ===== Accueil : liste des leçons / devoirs ===== -->
+    <section id="view-accueil" class="view active">
+      <h2 class="view-title">Mes leçons et devoirs</h2>
+
+      <div class="filter-row">
+        <button data-filter="tous" class="active">Tous</button>
+        <button data-filter="lecons">Leçons</button>
+        <button data-filter="devoirs">Devoirs</button>
+        <button data-filter="en-retard">En retard</button>
+      </div>
+
+      <div id="entries-list"></div>
+
+      <div id="empty-state" class="empty-state" style="display:none;">
+        <div class="big">Le carnet est vide</div>
+        <p>Ajoute ta première leçon ou ton premier devoir depuis l'onglet « Ajouter ».</p>
+      </div>
+    </section>
+
+    <!-- ===== Ajouter ===== -->
+    <section id="view-ajouter" class="view">
+      <h2 class="view-title">Ajouter une leçon ou un devoir</h2>
+
+      <form id="entry-form" class="entry-form">
+        <div class="field">
+          <label>Type</label>
+          <div class="type-toggle">
+            <button type="button" data-type="lecon" class="active lecon">Leçon</button>
+            <button type="button" data-type="devoir">Devoir</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-livre">Livre</label>
+          <input type="text" id="f-livre" name="livre" placeholder="Ex. Grammaire CM2" required>
+        </div>
+
+        <div class="field">
+          <label for="f-matiere">Matière</label>
+          <input type="text" id="f-matiere" name="matiere" placeholder="Ex. Français">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-page">Page</label>
+            <input type="text" id="f-page" name="page" placeholder="Ex. 42">
+          </div>
+          <div class="field">
+            <label for="f-heure">Heure du cours</label>
+            <input type="time" id="f-heure" name="heure">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="f-date">À remettre le</label>
+            <input type="date" id="f-date" name="dateRemise">
+          </div>
+          <div class="field">
+            <label for="f-prof">Professeur</label>
+            <input type="text" id="f-prof" name="professeur" placeholder="Nom du professeur">
+          </div>
+        </div>
+
+        <div class="field" id="field-notes-prof">
+          <label for="f-notes">Notes du professeur (si le devoir ou la leçon s'y trouve)</label>
+          <textarea id="f-notes" name="notesProf" placeholder="Recopie ici ce que le professeur a noté"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary">Ajouter au carnet</button>
+        <div class="form-msg" id="form-msg"></div>
+      </form>
+    </section>
+
+    <!-- ===== Feuille de mise au net ===== -->
+    <section id="view-feuille" class="view">
+      <h2 class="view-title">Feuille de mise au net</h2>
+
+      <div class="profile-block">
+        <div class="field-row">
+          <div class="field">
+            <label for="p-nom">Nom</label>
+            <input type="text" id="p-nom" placeholder="Nom">
+          </div>
+          <div class="field">
+            <label for="p-prenom">Prénom</label>
+            <input type="text" id="p-prenom" placeholder="Prénom">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="p-classe">Classe</label>
+            <input type="text" id="p-classe" placeholder="Ex. CM2">
+          </div>
+          <div class="field">
+            <label for="p-ecole">École</label>
+            <input type="text" id="p-ecole" placeholder="Nom de l'école">
+          </div>
+        </div>
+      </div>
+
+      <div class="sheet-picker">
+        <select id="sheet-select">
+          <option value="">— Choisir un devoir —</option>
+        </select>
+      </div>
+
+      <div class="sheet-writing-controls">
+        <label for="sheet-writing-style">✍️ Style d’écriture</label>
+        <select id="sheet-writing-style" aria-label="Choisir le style d’écriture">
+          <option value="dancing">Dancing Script — manuscrite</option>
+          <option value="school">Écriture scolaire</option>
+          <option value="keyboard">Clavier — classique</option>
+        </select>
+        <div class="sheet-writing-preview">Aa — aperçu</div>
+      </div>
+
+      <div class="sheet">
+        <div class="sheet-header">
+          <div class="grid-2 student-line">
+            <div><span class="lbl">Nom</span><span class="val" id="sheet-nom">—</span></div>
+            <div><span class="lbl">Prénom</span><span class="val" id="sheet-prenom">—</span></div>
+            <div><span class="lbl">Classe</span><span class="val" id="sheet-classe">—</span></div>
+            <div><span class="lbl">École</span><span class="val" id="sheet-ecole">—</span></div>
+          </div>
+          <div class="grid-2">
+            <div><span class="lbl">Livre</span><span class="val" id="sheet-livre">—</span></div>
+            <div><span class="lbl">Matière</span><span class="val" id="sheet-matiere">—</span></div>
+            <div><span class="lbl">Page</span><span class="val" id="sheet-page">—</span></div>
+            <div><span class="lbl">Professeur</span><span class="val" id="sheet-prof">—</span></div>
+            <div><span class="lbl">À remettre le</span><span class="val" id="sheet-date">—</span></div>
+          </div>
+          <div class="title-field" id="sheet-title">Feuille libre</div>
+        </div>
+        <div class="sheet-body" id="sheet-body" contenteditable="true" spellcheck="true"></div>
+      </div>
+
+      <div class="sheet-actions">
+        <button type="button" class="btn-secondary" id="sheet-save">Enregistrer le brouillon</button>
+        <button type="button" class="btn-primary" id="sheet-print">Imprimer / PDF</button>
+      </div>
+      <div class="form-msg" id="sheet-save-msg"></div>
+    </section>
+
+    <!-- ===== À propos ===== -->
+    <section id="view-apropos" class="view">
+      <h2 class="view-title">À propos</h2>
+      <div class="about-card">
+        <div class="logo-mark">Carnet de leçons</div>
+        <p>Créé par maître Jules Enock, pour aider chaque élève à suivre ses leçons et devoirs, du cahier de texte jusqu'à la feuille de mise au net.</p>
+        <div class="contact">Contact : +509 4040 9680</div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  const STORAGE_KEY = "carnet-lecons-entries-v1";
+
+  /* ---------------- Storage ---------------- */
+
+  function loadEntries() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      console.error("Lecture impossible", e);
+      return [];
+    }
+  }
+
+  function saveEntries(entries) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      return true;
+    } catch (e) {
+      console.error("Écriture impossible", e);
+      return false;
+    }
+  }
+
+  let entries = loadEntries();
+  let currentFilter = "tous";
+  let currentType = "lecon"; // pour le formulaire
+
+  /* ---------------- Navigation ---------------- */
+
+  const tabButtons = document.querySelectorAll("nav.tabs button");
+  const views = document.querySelectorAll("section.view");
+
+  function showView(name) {
+    views.forEach((v) => v.classList.toggle("active", v.id === "view-" + name));
+    tabButtons.forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+    if (name === "feuille") populateSheetPicker();
+    if (name === "accueil") renderList();
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => showView(btn.dataset.view));
+  });
+
+  /* ---------------- Rendu de la liste ---------------- */
+
+  const listEl = document.getElementById("entries-list");
+  const emptyEl = document.getElementById("empty-state");
+  const filterButtons = document.querySelectorAll(".filter-row button");
+
+  filterButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentFilter = btn.dataset.filter;
+      filterButtons.forEach((b) => b.classList.toggle("active", b === btn));
+      renderList();
+    });
+  });
+
+  function fmtDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso + "T00:00:00");
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" });
+  }
+
+  function isLate(entry) {
+    if (entry.type !== "devoir" || !entry.dateRemise || entry.devoirRemis) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(entry.dateRemise + "T00:00:00");
+    return due < today;
+  }
+
+  function matchesFilter(entry) {
+    if (currentFilter === "tous") return true;
+    if (currentFilter === "lecons") return entry.type === "lecon";
+    if (currentFilter === "devoirs") return entry.type === "devoir";
+    if (currentFilter === "en-retard") return isLate(entry);
+    return true;
+  }
+
+  function renderList() {
+    const sorted = [...entries].sort((a, b) => {
+      const da = a.dateRemise || "9999";
+      const db = b.dateRemise || "9999";
+      return da.localeCompare(db);
+    });
+    const filtered = sorted.filter(matchesFilter);
+
+    listEl.innerHTML = "";
+
+    if (filtered.length === 0) {
+      emptyEl.style.display = "block";
+      return;
+    }
+    emptyEl.style.display = "none";
+
+    filtered.forEach((entry) => {
+      listEl.appendChild(renderCard(entry));
+    });
+  }
+
+  function badge(label, on, tone, onClick) {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "status-badge" + (on ? " on " + tone : "");
+    b.textContent = label;
+    b.addEventListener("click", onClick);
+    return b;
+  }
+
+  function renderCard(entry) {
+    const card = document.createElement("div");
+    card.className = "entry-card";
+
+    const top = document.createElement("div");
+    top.className = "row-top";
+
+    const pill = document.createElement("span");
+    pill.className = "type-pill" + (entry.type === "devoir" ? " devoir" : "");
+    pill.textContent = entry.type === "devoir" ? "Devoir" : "Leçon";
+    top.appendChild(pill);
+
+    if (isLate(entry)) {
+      const late = document.createElement("span");
+      late.className = "status-badge on bad";
+      late.textContent = "En retard";
+      top.appendChild(late);
+    }
+    card.appendChild(top);
+
+    const h3 = document.createElement("h3");
+    h3.textContent = entry.livre || "(sans titre)";
+    card.appendChild(h3);
+
+    if (entry.matiere) {
+      const metaMatiere = document.createElement("div");
+      metaMatiere.className = "meta";
+      metaMatiere.innerHTML = `Matière : <strong>${escapeHtml(entry.matiere)}</strong>`;
+      card.appendChild(metaMatiere);
+    }
+
+    const metaPage = document.createElement("div");
+    metaPage.className = "meta";
+    metaPage.innerHTML = `Page : <strong>${escapeHtml(entry.page || "—")}</strong>`;
+    card.appendChild(metaPage);
+
+    const metaProf = document.createElement("div");
+    metaProf.className = "meta";
+    metaProf.innerHTML = `Professeur : <strong>${escapeHtml(entry.professeur || "—")}</strong> · Cours de <strong>${escapeHtml(entry.heure || "—")}</strong>`;
+    card.appendChild(metaProf);
+
+    const metaDate = document.createElement("div");
+    metaDate.className = "meta";
+    metaDate.innerHTML = `À remettre le : <strong>${fmtDate(entry.dateRemise)}</strong>`;
+    card.appendChild(metaDate);
+
+    if (entry.notesProf) {
+      const notes = document.createElement("div");
+      notes.className = "prof-notes";
+      notes.textContent = "Notes du professeur : " + entry.notesProf;
+      card.appendChild(notes);
+    }
+
+    const statusRow = document.createElement("div");
+    statusRow.className = "status-row";
+
+    if (entry.type === "lecon") {
+      statusRow.appendChild(badge("Leçon sue", entry.leconSue, "ok", () => toggleField(entry.id, "leconSue")));
+      statusRow.appendChild(badge("Leçon non sue", !entry.leconSue, "warn", () => toggleField(entry.id, "leconSue", false)));
+    } else {
+      statusRow.appendChild(badge("Devoir rédigé", entry.devoirRedige, "ok", () => toggleField(entry.id, "devoirRedige")));
+      statusRow.appendChild(badge("Devoir remis", entry.devoirRemis, "ok", () => toggleField(entry.id, "devoirRemis")));
+      statusRow.appendChild(badge("Non remis", !entry.devoirRemis, "warn", () => toggleField(entry.id, "devoirRemis", false)));
+    }
+    card.appendChild(statusRow);
+
+    const bottom = document.createElement("div");
+    bottom.className = "bottom-row";
+
+    const noteField = document.createElement("div");
+    noteField.className = "note-field";
+    const noteInput = document.createElement("input");
+    noteInput.type = "text";
+    noteInput.inputMode = "decimal";
+    noteInput.placeholder = "—";
+    noteInput.value = entry.note || "";
+    noteInput.addEventListener("change", () => {
+      updateEntry(entry.id, { note: noteInput.value });
+    });
+    noteField.appendChild(document.createTextNode("Note : "));
+    noteField.appendChild(noteInput);
+    bottom.appendChild(noteField);
+
+    const actions = document.createElement("div");
+    actions.className = "card-actions";
+
+    if (entry.type === "devoir") {
+      const sheetBtn = document.createElement("button");
+      sheetBtn.type = "button";
+      sheetBtn.className = "icon-btn";
+      sheetBtn.textContent = "Feuille";
+      sheetBtn.addEventListener("click", () => {
+        showView("feuille");
+        document.getElementById("sheet-select").value = entry.id;
+        loadSheet(entry.id);
+      });
+      actions.appendChild(sheetBtn);
+    }
+
+    const delBtn = document.createElement("button");
+    delBtn.type = "button";
+    delBtn.className = "icon-btn danger";
+    delBtn.textContent = "Supprimer";
+    delBtn.addEventListener("click", () => {
+      if (confirm("Supprimer cette entrée du carnet ?")) {
+        entries = entries.filter((e) => e.id !== entry.id);
+        saveEntries(entries);
+        renderList();
+      }
+    });
+    actions.appendChild(delBtn);
+
+    bottom.appendChild(actions);
+    card.appendChild(bottom);
+
+    return card;
+  }
+
+  function toggleField(id, field, forceValue) {
+    const entry = entries.find((e) => e.id === id);
+    if (!entry) return;
+    const newVal = forceValue !== undefined ? forceValue : !entry[field];
+    updateEntry(id, { [field]: newVal });
+  }
+
+  function updateEntry(id, patch) {
+    entries = entries.map((e) => (e.id === id ? { ...e, ...patch } : e));
+    saveEntries(entries);
+    renderList();
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  /* ---------------- Formulaire d'ajout ---------------- */
+
+  const form = document.getElementById("entry-form");
+  const typeToggleBtns = document.querySelectorAll(".type-toggle button");
+  const formMsg = document.getElementById("form-msg");
+
+  typeToggleBtns.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      currentType = btn.dataset.type;
+      typeToggleBtns.forEach((b) => b.classList.toggle("active", b === btn));
+      typeToggleBtns.forEach((b) => b.classList.toggle(b.dataset.type, b === btn));
+      document.getElementById("field-notes-prof").style.display = "block";
+    });
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const entry = {
+      id: "e" + Date.now() + Math.random().toString(36).slice(2, 7),
+      type: currentType,
+      livre: fd.get("livre").trim(),
+      matiere: fd.get("matiere").trim(),
+      page: fd.get("page").trim(),
+      dateRemise: fd.get("dateRemise"),
+      professeur: fd.get("professeur").trim(),
+      heure: fd.get("heure").trim(),
+      notesProf: fd.get("notesProf").trim(),
+      leconSue: false,
+      devoirRedige: false,
+      devoirRemis: false,
+      note: "",
+      brouillon: ""
+    };
+    entries.push(entry);
+    saveEntries(entries);
+    form.reset();
+    formMsg.textContent = entry.type === "devoir" ? "Devoir ajouté au carnet ✓" : "Leçon ajoutée au carnet ✓";
+    setTimeout(() => (formMsg.textContent = ""), 2500);
+    showView("accueil");
+  });
+
+  /* ---------------- Feuille de mise au net ---------------- */
+
+  const sheetSelect = document.getElementById("sheet-select");
+  const sheetBody = document.getElementById("sheet-body");
+  const sheetWritingStyle = document.getElementById("sheet-writing-style");
+  const WRITING_STYLE_KEY = "carnet-lecons-writing-style-v1";
+
+  function getWritingStyle() {
+    return localStorage.getItem(WRITING_STYLE_KEY) || "dancing";
+  }
+
+  function applyWritingStyle(style) {
+    const value = style || "dancing";
+    sheetBody.classList.remove("writing-dancing", "writing-school", "writing-keyboard");
+    sheetBody.classList.add("writing-" + value);
+    if (sheetWritingStyle) sheetWritingStyle.value = value;
+    try { localStorage.setItem(WRITING_STYLE_KEY, value); } catch (e) {}
+  }
+
+  const sheetTitle = document.getElementById("sheet-title");
+  const sheetMetaLivre = document.getElementById("sheet-livre");
+  const sheetMetaMatiere = document.getElementById("sheet-matiere");
+  const sheetMetaPage = document.getElementById("sheet-page");
+  const sheetMetaProf = document.getElementById("sheet-prof");
+  const sheetMetaDate = document.getElementById("sheet-date");
+  const sheetNom = document.getElementById("sheet-nom");
+  const sheetPrenom = document.getElementById("sheet-prenom");
+  const sheetClasse = document.getElementById("sheet-classe");
+  const sheetEcole = document.getElementById("sheet-ecole");
+
+  /* --- Profil élève (Nom / Prénom / Classe / École), partagé par toutes les feuilles --- */
+
+  const PROFILE_KEY = "carnet-lecons-profil-v1";
+
+  function loadProfile() {
+    try {
+      const raw = localStorage.getItem(PROFILE_KEY);
+      return raw ? JSON.parse(raw) : { nom: "", prenom: "", classe: "", ecole: "" };
+    } catch (e) {
+      return { nom: "", prenom: "", classe: "", ecole: "" };
+    }
+  }
+
+  function saveProfile(profile) {
+    try {
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    } catch (e) {
+      console.error("Profil non enregistré", e);
+    }
+  }
+
+  const profileInputs = {
+    nom: document.getElementById("p-nom"),
+    prenom: document.getElementById("p-prenom"),
+    classe: document.getElementById("p-classe"),
+    ecole: document.getElementById("p-ecole")
+  };
+
+  function refreshStudentHeader() {
+    const p = loadProfile();
+    sheetNom.textContent = p.nom || "—";
+    sheetPrenom.textContent = p.prenom || "—";
+    sheetClasse.textContent = p.classe || "—";
+    sheetEcole.textContent = p.ecole || "—";
+  }
+
+  (function initProfile() {
+    const p = loadProfile();
+    profileInputs.nom.value = p.nom || "";
+    profileInputs.prenom.value = p.prenom || "";
+    profileInputs.classe.value = p.classe || "";
+    profileInputs.ecole.value = p.ecole || "";
+    Object.entries(profileInputs).forEach(([key, input]) => {
+      input.addEventListener("input", () => {
+        const current = loadProfile();
+        current[key] = input.value;
+        saveProfile(current);
+        refreshStudentHeader();
+      });
+    });
+    refreshStudentHeader();
+  })();
+
+  function populateSheetPicker() {
+    const devoirs = entries.filter((e) => e.type === "devoir");
+    const current = sheetSelect.value;
+    sheetSelect.innerHTML = '<option value="">— Choisir un devoir —</option>';
+    devoirs.forEach((d) => {
+      const opt = document.createElement("option");
+      opt.value = d.id;
+      opt.textContent = `${d.livre || "Devoir"} (p. ${d.page || "?"}) — ${fmtDate(d.dateRemise)}`;
+      sheetSelect.appendChild(opt);
+    });
+    if (current) sheetSelect.value = current;
+  }
+
+  sheetSelect.addEventListener("change", () => loadSheet(sheetSelect.value));
+  if (sheetWritingStyle) {
+    sheetWritingStyle.addEventListener("change", () => {
+      applyWritingStyle(sheetWritingStyle.value);
+    });
+  }
+
+
+  function loadSheet(id) {
+    const entry = entries.find((e) => e.id === id);
+    refreshStudentHeader();
+    applyWritingStyle(getWritingStyle());
+    if (!entry) {
+      sheetTitle.textContent = "Feuille libre";
+      sheetMetaLivre.textContent = "—";
+      sheetMetaMatiere.textContent = "—";
+      sheetMetaPage.textContent = "—";
+      sheetMetaProf.textContent = "—";
+      sheetMetaDate.textContent = "—";
+      sheetBody.dataset.entryId = "";
+      sheetBody.innerHTML = "";
+      return;
+    }
+    sheetTitle.textContent = entry.livre || "Devoir";
+    sheetMetaLivre.textContent = entry.livre || "—";
+    sheetMetaMatiere.textContent = entry.matiere || "—";
+    sheetMetaPage.textContent = entry.page || "—";
+    sheetMetaProf.textContent = entry.professeur || "—";
+    sheetMetaDate.textContent = fmtDate(entry.dateRemise);
+    sheetBody.dataset.entryId = entry.id;
+    sheetBody.innerHTML = entry.brouillon || "";
+  }
+
+  document.getElementById("sheet-save").addEventListener("click", () => {
+    const id = sheetBody.dataset.entryId;
+    if (!id) {
+      alert("Choisis d'abord un devoir dans la liste ci-dessus.");
+      return;
+    }
+    updateEntry(id, { brouillon: sheetBody.innerHTML });
+    const saveMsg = document.getElementById("sheet-save-msg");
+    saveMsg.textContent = "Brouillon enregistré ✓";
+    setTimeout(() => (saveMsg.textContent = ""), 2000);
+  });
+
+  document.getElementById("sheet-print").addEventListener("click", () => {
+    window.print();
+  });
+
+  /* ---------------- Init ---------------- */
+
+  showView("accueil");
+  renderList();
+  applyWritingStyle(getWritingStyle());
+
+  /* ---------------- Service worker ---------------- */
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch((err) => {
+        console.warn("Service worker non enregistré :", err);
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

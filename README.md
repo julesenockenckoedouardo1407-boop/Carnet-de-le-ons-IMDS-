@@ -47,6 +47,22 @@ envoyer tels quels.
 4. Choisis la plateforme **Android**, génère le paquet, télécharge
    l'APK.
 
+## Fonctionnalités
+
+- **Carnet** : liste des leçons/devoirs avec recherche et filtres.
+- **Ajouter** : livre, matière, page, professeur, heure, date de remise, notes du prof, photo jointe, rappel veille de la remise.
+- **Horaire** : emploi du temps hebdomadaire.
+- **Feuille** : mise au net quadrillée avec entête (élève + devoir), imprimable/PDF.
+- **Profs** : répertoire des professeurs (autocomplétion dans le formulaire Ajouter).
+- **Bilan** : statistiques (moyenne, % de devoirs remis, etc.) + export en document Word.
+- **M. Enock** : colle un devoir et ouvre Claude.ai pour de l'aide gratuite, ou renseigne ta propre clé API Anthropic (option avancée) pour générer les réponses directement dans l'app.
+- Sélecteur de profil en haut de l'écran pour gérer plusieurs élèves sur le même téléphone.
+
+### À savoir sur les rappels et Maître Enock
+
+- Les rappels utilisent les notifications du navigateur : ils se déclenchent quand l'app est ouverte ou récemment utilisée. Ce n'est pas une alarme garantie téléphone fermé plusieurs jours.
+- Le mode avancé de Maître Enock appelle l'API Anthropic directement depuis le téléphone avec ta propre clé (créée sur console.anthropic.com, payante à l'usage). La clé reste uniquement stockée sur l'appareil.
+
 ## Remarques
 
 - Le bouton « Imprimer / PDF » de la feuille de mise au net utilise

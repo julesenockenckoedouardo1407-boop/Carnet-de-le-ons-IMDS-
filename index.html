@@ -87,6 +87,13 @@ header.top {
   border-bottom: 4px solid var(--margin-red);
 }
 
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 header.top h1 {
   font-family: var(--font-head);
   font-weight: 700;
@@ -100,6 +107,17 @@ header.top p {
   font-size: 0.85rem;
   color: #D7DEEC;
 }
+
+.profile-select {
+  background: rgba(255,255,255,0.14);
+  color: var(--paper);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 0.78rem;
+  max-width: 130px;
+}
+.profile-select option { color: var(--ink); }
 
 /* ---------- Tab navigation (notebook tabs) ---------- */
 
@@ -115,10 +133,10 @@ nav.tabs button {
   border: none;
   background: transparent;
   font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--ink-soft);
-  padding: 12px 10px 10px;
+  padding: 12px 9px 10px;
   cursor: pointer;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
@@ -145,6 +163,12 @@ h2.view-title {
   margin: 0 0 14px;
   padding-left: 12px;
   border-left: 3px solid var(--margin-red);
+}
+
+p.view-sub {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: -8px 0 16px;
 }
 
 /* ---------- Cards / list ---------- */
@@ -203,6 +227,16 @@ h2.view-title {
   color: var(--ink-soft);
 }
 
+.entry-card .photo-thumb {
+  margin-top: 10px;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
 .status-row {
   display: flex;
   flex-wrap: wrap;
@@ -231,6 +265,7 @@ h2.view-title {
   align-items: center;
   margin-top: 12px;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .note-field {
@@ -250,7 +285,7 @@ h2.view-title {
   text-align: center;
 }
 
-.card-actions { display: flex; gap: 8px; }
+.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .icon-btn {
   border: 1px solid var(--border);
@@ -273,7 +308,17 @@ h2.view-title {
 }
 .empty-state .big { font-family: var(--font-head); font-size: 1.1rem; color: var(--accent-blue-dark); margin-bottom: 6px; }
 
-/* ---------- Filters ---------- */
+/* ---------- Search + Filters ---------- */
+
+.search-box {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  background: #FFFDF8;
+}
 
 .filter-row {
   display: flex;
@@ -297,15 +342,44 @@ h2.view-title {
   color: var(--paper);
 }
 
+/* ---------- Reminder banner ---------- */
+
+.reminder-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--accent-amber-bg);
+  border: 1px solid var(--accent-amber);
+  color: var(--accent-amber);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  font-size: 0.82rem;
+}
+.reminder-banner button {
+  border: none;
+  background: var(--accent-amber);
+  color: #fff;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 /* ---------- Form ---------- */
 
-form.entry-form {
+form.entry-form, .panel-card {
   background: var(--paper);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 18px;
 }
+
+.panel-card { margin-bottom: 16px; }
 
 .field { margin-bottom: 14px; }
 
@@ -354,6 +428,24 @@ form.entry-form {
 .type-toggle button.active.lecon { background: var(--accent-blue); color: var(--paper); }
 .type-toggle button.active.devoir { background: var(--accent-amber); color: var(--paper); }
 
+.checkbox-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+.checkbox-field input { width: auto; }
+
+.photo-preview {
+  margin-top: 8px;
+  max-width: 140px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  display: none;
+}
+
 .btn-primary {
   width: 100%;
   padding: 12px;
@@ -367,6 +459,7 @@ form.entry-form {
   margin-top: 4px;
 }
 .btn-primary:active { background: var(--accent-blue-dark); }
+.btn-primary:disabled { opacity: 0.6; }
 
 .btn-secondary {
   width: 100%;
@@ -387,6 +480,142 @@ form.entry-form {
   font-weight: 600;
   margin-top: 10px;
   min-height: 1.2em;
+}
+
+/* ---------- Emploi du temps ---------- */
+
+.schedule-day {
+  margin-bottom: 16px;
+}
+.schedule-day h3 {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  color: var(--accent-blue-dark);
+  margin: 0 0 8px;
+}
+.schedule-slot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 8px;
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+.schedule-slot .slot-time {
+  font-weight: 700;
+  color: var(--accent-blue-dark);
+  margin-right: 8px;
+}
+.schedule-slot .slot-sub { color: var(--ink-soft); }
+
+/* ---------- Répertoire des professeurs ---------- */
+
+.prof-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.prof-item .prof-name { font-weight: 700; color: var(--ink); }
+.prof-item .prof-matiere { font-size: 0.8rem; color: var(--ink-soft); }
+
+/* ---------- Bilan / tableau de bord ---------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px;
+  text-align: center;
+}
+.stat-card .stat-value {
+  font-family: var(--font-head);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent-blue-dark);
+}
+.stat-card .stat-label {
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  margin-top: 2px;
+}
+
+/* ---------- Maître Enock (IA) ---------- */
+
+.ai-box textarea { min-height: 140px; }
+.ai-actions { display: flex; gap: 8px; margin-top: 4px; }
+.ai-actions button { flex: 1; }
+.ai-answer {
+  margin-top: 14px;
+  padding: 12px 14px;
+  background: var(--paper-alt);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  line-height: 1.55;
+  display: none;
+}
+details.ai-advanced {
+  margin-top: 16px;
+  border-top: 1px dashed var(--border);
+  padding-top: 12px;
+}
+details.ai-advanced summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent-blue-dark);
+  font-size: 0.88rem;
+}
+.ai-note {
+  font-size: 0.76rem;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* ---------- Photo modal ---------- */
+
+.photo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,20,0.86);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+}
+.photo-modal.open { display: flex; }
+.photo-modal img {
+  max-width: 100%;
+  max-height: 85vh;
+  border-radius: 8px;
+}
+.photo-modal .close-modal {
+  position: absolute;
+  top: env(safe-area-inset-top, 16px);
+  right: 16px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1.1rem;
+  cursor: pointer;
 }
 
 /* ---------- Feuille de mise au net ---------- */
@@ -513,7 +742,7 @@ form.entry-form {
 
 @media print {
   body::before { display: none; }
-  header.top, nav.tabs, main > section:not(#view-feuille), .filter-row, .sheet-actions, .sheet-picker, .profile-block {
+  header.top, nav.tabs, main > section:not(#view-feuille), .filter-row, .sheet-actions, .sheet-picker, .profile-block, .search-box, .reminder-banner {
     display: none !important;
   }
   #view-feuille { display: block !important; }
@@ -530,7 +759,7 @@ form.entry-form {
     --border: #3A3428;
     --rule-blue: #33455F;
   }
-  .sheet, .sheet-header, .field input, .field select, .field textarea {
+  .sheet, .sheet-header, .field input, .field select, .field textarea, .search-box {
     background: #24211A;
     color: var(--ink);
   }
@@ -542,15 +771,24 @@ form.entry-form {
 <div id="app">
 
   <header class="top">
-    <h1>Carnet de leçons</h1>
-    <p>Jules Enock</p>
+    <div class="header-row">
+      <div>
+        <h1>Carnet de leçons</h1>
+        <p>Jules Enock</p>
+      </div>
+      <select id="profile-select" class="profile-select"></select>
+    </div>
   </header>
 
   <nav class="tabs">
-    <button data-view="accueil" class="active">Mon carnet</button>
+    <button data-view="accueil" class="active">Carnet</button>
     <button data-view="ajouter">Ajouter</button>
+    <button data-view="horaire">Horaire</button>
     <button data-view="feuille">Feuille</button>
-    <button data-view="apropos">À propos</button>
+    <button data-view="profs">Profs</button>
+    <button data-view="bilan">Bilan</button>
+    <button data-view="enock">M. Enock</button>
+    <button data-view="apropos">Infos</button>
   </nav>
 
   <main>
@@ -558,6 +796,13 @@ form.entry-form {
     <!-- ===== Accueil : liste des leçons / devoirs ===== -->
     <section id="view-accueil" class="view active">
       <h2 class="view-title">Mes leçons et devoirs</h2>
+
+      <div id="reminder-banner" class="reminder-banner" style="display:none;">
+        <span>Active les rappels pour ne rien oublier.</span>
+        <button type="button" id="reminder-enable-btn">Activer</button>
+      </div>
+
+      <input type="search" id="search-box" class="search-box" placeholder="Rechercher (livre, matière, professeur)...">
 
       <div class="filter-row">
         <button data-filter="tous" class="active">Tous</button>
@@ -594,7 +839,8 @@ form.entry-form {
 
         <div class="field">
           <label for="f-matiere">Matière</label>
-          <input type="text" id="f-matiere" name="matiere" placeholder="Ex. Français">
+          <input type="text" id="f-matiere" name="matiere" placeholder="Ex. Français" list="matiere-list">
+          <datalist id="matiere-list"></datalist>
         </div>
 
         <div class="field-row">
@@ -615,7 +861,8 @@ form.entry-form {
           </div>
           <div class="field">
             <label for="f-prof">Professeur</label>
-            <input type="text" id="f-prof" name="professeur" placeholder="Nom du professeur">
+            <input type="text" id="f-prof" name="professeur" placeholder="Nom du professeur" list="prof-list">
+            <datalist id="prof-list"></datalist>
           </div>
         </div>
 
@@ -624,9 +871,59 @@ form.entry-form {
           <textarea id="f-notes" name="notesProf" placeholder="Recopie ici ce que le professeur a noté"></textarea>
         </div>
 
+        <div class="checkbox-field">
+          <input type="checkbox" id="f-rappel" name="rappel">
+          <label for="f-rappel" style="margin:0;">Me rappeler la veille de la date de remise</label>
+        </div>
+
+        <div class="field">
+          <label for="f-photo">Photo jointe (tableau, cahier du professeur...)</label>
+          <input type="file" id="f-photo" name="photo" accept="image/*" capture="environment">
+          <img id="photo-preview" class="photo-preview" alt="Aperçu de la photo">
+        </div>
+
         <button type="submit" class="btn-primary">Ajouter au carnet</button>
         <div class="form-msg" id="form-msg"></div>
       </form>
+    </section>
+
+    <!-- ===== Emploi du temps ===== -->
+    <section id="view-horaire" class="view">
+      <h2 class="view-title">Emploi du temps</h2>
+      <p class="view-sub">Ton horaire de cours de la semaine.</p>
+
+      <form id="schedule-form" class="panel-card">
+        <div class="field-row">
+          <div class="field">
+            <label for="s-jour">Jour</label>
+            <select id="s-jour" name="jour">
+              <option>Lundi</option>
+              <option>Mardi</option>
+              <option>Mercredi</option>
+              <option>Jeudi</option>
+              <option>Vendredi</option>
+              <option>Samedi</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="s-heure">Heure</label>
+            <input type="time" id="s-heure" name="heure" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="s-matiere">Matière</label>
+            <input type="text" id="s-matiere" name="matiere" required>
+          </div>
+          <div class="field">
+            <label for="s-prof">Professeur</label>
+            <input type="text" id="s-prof" name="professeur">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">Ajouter au planning</button>
+      </form>
+
+      <div id="schedule-list"></div>
     </section>
 
     <!-- ===== Feuille de mise au net ===== -->
@@ -689,6 +986,67 @@ form.entry-form {
       <div class="form-msg" id="sheet-save-msg"></div>
     </section>
 
+    <!-- ===== Répertoire des professeurs ===== -->
+    <section id="view-profs" class="view">
+      <h2 class="view-title">Répertoire des professeurs</h2>
+
+      <form id="prof-form" class="panel-card">
+        <div class="field">
+          <label for="pr-nom">Nom du professeur</label>
+          <input type="text" id="pr-nom" required>
+        </div>
+        <div class="field">
+          <label for="pr-matiere">Matière enseignée</label>
+          <input type="text" id="pr-matiere">
+        </div>
+        <div class="field">
+          <label for="pr-contact">Contact (optionnel)</label>
+          <input type="text" id="pr-contact" placeholder="Téléphone ou email">
+        </div>
+        <button type="submit" class="btn-primary">Ajouter au répertoire</button>
+      </form>
+
+      <div id="profs-list"></div>
+    </section>
+
+    <!-- ===== Bilan / tableau de bord ===== -->
+    <section id="view-bilan" class="view">
+      <h2 class="view-title">Tableau de bord</h2>
+
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <button type="button" class="btn-primary" id="bilan-download">Télécharger en document Word</button>
+    </section>
+
+    <!-- ===== Maître Enock (assistant IA) ===== -->
+    <section id="view-enock" class="view">
+      <h2 class="view-title">Maître Enock</h2>
+      <p class="view-sub">Colle les questions d'un devoir, Maître Enock t'aide à rédiger les réponses.</p>
+
+      <div class="panel-card ai-box">
+        <div class="field">
+          <label for="ai-input">Texte du devoir (questions à copier-coller)</label>
+          <textarea id="ai-input" placeholder="Colle ici l'énoncé et les questions du devoir..."></textarea>
+        </div>
+        <div class="ai-actions">
+          <button type="button" class="btn-secondary" id="ai-copy">Copier le texte</button>
+          <button type="button" class="btn-primary" id="ai-open-claude">Ouvrir Claude.ai</button>
+        </div>
+        <p class="ai-note">Sans configuration : copie le devoir, puis colle-le dans Claude.ai (gratuit, sans clé) pour obtenir de l'aide.</p>
+
+        <details class="ai-advanced">
+          <summary>Configuration avancée — générer les réponses ici</summary>
+          <div class="field" style="margin-top:12px;">
+            <label for="ai-key">Ta clé API Anthropic (console.anthropic.com)</label>
+            <input type="password" id="ai-key" placeholder="sk-ant-...">
+          </div>
+          <button type="button" class="btn-primary" id="ai-generate">Générer les réponses avec Maître Enock</button>
+          <p class="ai-note">Ta clé reste uniquement sur cet appareil (jamais envoyée ailleurs qu'à l'API Anthropic). Cette fonction nécessite internet et une clé payante à ton nom — chaque génération a un petit coût.</p>
+          <div class="ai-answer" id="ai-answer"></div>
+        </details>
+      </div>
+    </section>
+
     <!-- ===== À propos ===== -->
     <section id="view-apropos" class="view">
       <h2 class="view-title">À propos</h2>
@@ -702,17 +1060,112 @@ form.entry-form {
   </main>
 </div>
 
+<div class="photo-modal" id="photo-modal">
+  <button type="button" class="close-modal" id="photo-modal-close">✕</button>
+  <img id="photo-modal-img" alt="Photo jointe en grand">
+</div>
+
 <script>
 (function () {
   "use strict";
 
-  const STORAGE_KEY = "carnet-lecons-entries-v1";
+  /* ================================================================
+     Profils (plusieurs élèves sur le même téléphone)
+     ================================================================ */
 
-  /* ---------------- Storage ---------------- */
+  const PROFILES_KEY = "carnet-lecons-profiles-v1";
+  const ACTIVE_PROFILE_KEY = "carnet-lecons-active-profile-v1";
+
+  function loadProfilesList() {
+    try {
+      const raw = localStorage.getItem(PROFILES_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+
+  function saveProfilesList(list) {
+    try { localStorage.setItem(PROFILES_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+
+  function getActiveProfileId() {
+    return localStorage.getItem(ACTIVE_PROFILE_KEY) || "";
+  }
+
+  function setActiveProfileId(id) {
+    localStorage.setItem(ACTIVE_PROFILE_KEY, id);
+  }
+
+  function migrateLegacyData(newProfileId) {
+    // Reprend les données de la toute première version (mono-profil) si présentes
+    try {
+      const legacyEntries = localStorage.getItem("carnet-lecons-entries-v1");
+      if (legacyEntries) localStorage.setItem(storageKey("entries", newProfileId), legacyEntries);
+      const legacyProfil = localStorage.getItem("carnet-lecons-profil-v1");
+      if (legacyProfil) localStorage.setItem(storageKey("studentinfo", newProfileId), legacyProfil);
+    } catch (e) {}
+  }
+
+  function ensureProfiles() {
+    let list = loadProfilesList();
+    if (list.length === 0) {
+      const id = "p" + Date.now().toString(36);
+      list = [{ id: id, label: "Profil 1" }];
+      saveProfilesList(list);
+      setActiveProfileId(id);
+      migrateLegacyData(id);
+    }
+    if (!getActiveProfileId() || !list.some((p) => p.id === getActiveProfileId())) {
+      setActiveProfileId(list[0].id);
+    }
+    return list;
+  }
+
+  function storageKey(base, profileId) {
+    return "carnet:" + base + ":" + (profileId || getActiveProfileId());
+  }
+
+  function renderProfileSelect() {
+    const list = loadProfilesList();
+    const sel = document.getElementById("profile-select");
+    const active = getActiveProfileId();
+    sel.innerHTML = "";
+    list.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.id;
+      opt.textContent = p.label;
+      if (p.id === active) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    const newOpt = document.createElement("option");
+    newOpt.value = "__new__";
+    newOpt.textContent = "+ Nouveau profil";
+    sel.appendChild(newOpt);
+  }
+
+  document.getElementById("profile-select").addEventListener("change", (e) => {
+    const val = e.target.value;
+    if (val === "__new__") {
+      const label = prompt("Nom de l'élève pour ce nouveau profil :");
+      if (!label) { renderProfileSelect(); return; }
+      const list = loadProfilesList();
+      const id = "p" + Date.now().toString(36);
+      list.push({ id: id, label: label.trim() || "Profil" });
+      saveProfilesList(list);
+      setActiveProfileId(id);
+    } else {
+      setActiveProfileId(val);
+    }
+    renderProfileSelect();
+    reloadAllData();
+  });
+
+  /* ================================================================
+     Stockage : leçons / devoirs
+     ================================================================ */
 
   function loadEntries() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(storageKey("entries"));
       return raw ? JSON.parse(raw) : [];
     } catch (e) {
       console.error("Lecture impossible", e);
@@ -720,21 +1173,25 @@ form.entry-form {
     }
   }
 
-  function saveEntries(entries) {
+  function saveEntries(list) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      localStorage.setItem(storageKey("entries"), JSON.stringify(list));
       return true;
     } catch (e) {
-      console.error("Écriture impossible", e);
+      console.error("Écriture impossible (stockage plein ?)", e);
+      alert("Impossible d'enregistrer : la mémoire de l'appareil est peut-être pleine (photos trop lourdes ?).");
       return false;
     }
   }
 
-  let entries = loadEntries();
+  let entries = [];
   let currentFilter = "tous";
-  let currentType = "lecon"; // pour le formulaire
+  let currentType = "lecon";
+  let searchTerm = "";
 
-  /* ---------------- Navigation ---------------- */
+  /* ================================================================
+     Navigation
+     ================================================================ */
 
   const tabButtons = document.querySelectorAll("nav.tabs button");
   const views = document.querySelectorAll("section.view");
@@ -744,13 +1201,18 @@ form.entry-form {
     tabButtons.forEach((b) => b.classList.toggle("active", b.dataset.view === name));
     if (name === "feuille") populateSheetPicker();
     if (name === "accueil") renderList();
+    if (name === "horaire") renderSchedule();
+    if (name === "profs") renderProfs();
+    if (name === "bilan") renderBilan();
   }
 
   tabButtons.forEach((btn) => {
     btn.addEventListener("click", () => showView(btn.dataset.view));
   });
 
-  /* ---------------- Rendu de la liste ---------------- */
+  /* ================================================================
+     Rendu de la liste (avec recherche + filtres)
+     ================================================================ */
 
   const listEl = document.getElementById("entries-list");
   const emptyEl = document.getElementById("empty-state");
@@ -762,6 +1224,11 @@ form.entry-form {
       filterButtons.forEach((b) => b.classList.toggle("active", b === btn));
       renderList();
     });
+  });
+
+  document.getElementById("search-box").addEventListener("input", (e) => {
+    searchTerm = e.target.value.trim().toLowerCase();
+    renderList();
   });
 
   function fmtDate(iso) {
@@ -780,10 +1247,13 @@ form.entry-form {
   }
 
   function matchesFilter(entry) {
-    if (currentFilter === "tous") return true;
-    if (currentFilter === "lecons") return entry.type === "lecon";
-    if (currentFilter === "devoirs") return entry.type === "devoir";
-    if (currentFilter === "en-retard") return isLate(entry);
+    if (currentFilter === "lecons" && entry.type !== "lecon") return false;
+    if (currentFilter === "devoirs" && entry.type !== "devoir") return false;
+    if (currentFilter === "en-retard" && !isLate(entry)) return false;
+    if (searchTerm) {
+      const hay = [entry.livre, entry.matiere, entry.professeur].join(" ").toLowerCase();
+      if (!hay.includes(searchTerm)) return false;
+    }
     return true;
   }
 
@@ -870,6 +1340,15 @@ form.entry-form {
       card.appendChild(notes);
     }
 
+    if (entry.photo) {
+      const img = document.createElement("img");
+      img.className = "photo-thumb";
+      img.src = entry.photo;
+      img.alt = "Photo jointe";
+      img.addEventListener("click", () => openPhotoModal(entry.photo));
+      card.appendChild(img);
+    }
+
     const statusRow = document.createElement("div");
     statusRow.className = "status-row";
 
@@ -954,6 +1433,58 @@ form.entry-form {
     return div.innerHTML;
   }
 
+  /* ---------------- Photo (modal plein écran) ---------------- */
+
+  const photoModal = document.getElementById("photo-modal");
+  const photoModalImg = document.getElementById("photo-modal-img");
+  function openPhotoModal(src) {
+    photoModalImg.src = src;
+    photoModal.classList.add("open");
+  }
+  document.getElementById("photo-modal-close").addEventListener("click", () => {
+    photoModal.classList.remove("open");
+  });
+  photoModal.addEventListener("click", (e) => {
+    if (e.target === photoModal) photoModal.classList.remove("open");
+  });
+
+  function compressImage(file, maxDim, quality) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h = Math.round(h * maxDim / w); w = maxDim; }
+          else if (h > maxDim) { w = Math.round(w * maxDim / h); h = maxDim; }
+          const canvas = document.createElement("canvas");
+          canvas.width = w; canvas.height = h;
+          canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", quality));
+        };
+        img.onerror = reject;
+        img.src = reader.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  let pendingPhoto = "";
+  const photoInput = document.getElementById("f-photo");
+  const photoPreview = document.getElementById("photo-preview");
+  photoInput.addEventListener("change", () => {
+    const file = photoInput.files[0];
+    if (!file) { pendingPhoto = ""; photoPreview.style.display = "none"; return; }
+    compressImage(file, 900, 0.7).then((dataUrl) => {
+      pendingPhoto = dataUrl;
+      photoPreview.src = dataUrl;
+      photoPreview.style.display = "block";
+    }).catch(() => {
+      alert("Impossible de charger cette photo.");
+    });
+  });
+
   /* ---------------- Formulaire d'ajout ---------------- */
 
   const form = document.getElementById("entry-form");
@@ -982,6 +1513,8 @@ form.entry-form {
       professeur: fd.get("professeur").trim(),
       heure: fd.get("heure").trim(),
       notesProf: fd.get("notesProf").trim(),
+      rappel: !!fd.get("rappel"),
+      photo: pendingPhoto,
       leconSue: false,
       devoirRedige: false,
       devoirRemis: false,
@@ -991,12 +1524,157 @@ form.entry-form {
     entries.push(entry);
     saveEntries(entries);
     form.reset();
+    pendingPhoto = "";
+    photoPreview.style.display = "none";
     formMsg.textContent = entry.type === "devoir" ? "Devoir ajouté au carnet ✓" : "Leçon ajoutée au carnet ✓";
     setTimeout(() => (formMsg.textContent = ""), 2500);
     showView("accueil");
   });
 
-  /* ---------------- Feuille de mise au net ---------------- */
+  /* ================================================================
+     Emploi du temps
+     ================================================================ */
+
+  const JOURS = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
+
+  function loadSchedule() {
+    try {
+      const raw = localStorage.getItem(storageKey("schedule"));
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function saveSchedule(list) {
+    try { localStorage.setItem(storageKey("schedule"), JSON.stringify(list)); } catch (e) {}
+  }
+  let schedule = [];
+
+  document.getElementById("schedule-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const jour = document.getElementById("s-jour").value;
+    const heure = document.getElementById("s-heure").value;
+    const matiere = document.getElementById("s-matiere").value.trim();
+    const professeur = document.getElementById("s-prof").value.trim();
+    if (!heure || !matiere) return;
+    schedule.push({ id: "s" + Date.now().toString(36), jour, heure, matiere, professeur });
+    saveSchedule(schedule);
+    e.target.reset();
+    renderSchedule();
+  });
+
+  function renderSchedule() {
+    const container = document.getElementById("schedule-list");
+    container.innerHTML = "";
+    JOURS.forEach((jour) => {
+      const slots = schedule.filter((s) => s.jour === jour).sort((a, b) => a.heure.localeCompare(b.heure));
+      if (slots.length === 0) return;
+      const block = document.createElement("div");
+      block.className = "schedule-day";
+      const h3 = document.createElement("h3");
+      h3.textContent = jour;
+      block.appendChild(h3);
+      slots.forEach((s) => {
+        const row = document.createElement("div");
+        row.className = "schedule-slot";
+        const left = document.createElement("div");
+        left.innerHTML = `<span class="slot-time">${escapeHtml(s.heure)}</span><span class="slot-sub">${escapeHtml(s.matiere)}${s.professeur ? " — " + escapeHtml(s.professeur) : ""}</span>`;
+        row.appendChild(left);
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "icon-btn danger";
+        del.textContent = "✕";
+        del.addEventListener("click", () => {
+          schedule = schedule.filter((x) => x.id !== s.id);
+          saveSchedule(schedule);
+          renderSchedule();
+        });
+        row.appendChild(del);
+        block.appendChild(row);
+      });
+      container.appendChild(block);
+    });
+    if (schedule.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="big">Aucun horaire enregistré</div><p>Ajoute tes cours de la semaine ci-dessus.</p></div>';
+    }
+  }
+
+  /* ================================================================
+     Répertoire des professeurs
+     ================================================================ */
+
+  function loadProfs() {
+    try {
+      const raw = localStorage.getItem(storageKey("profs"));
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) { return []; }
+  }
+  function saveProfs(list) {
+    try { localStorage.setItem(storageKey("profs"), JSON.stringify(list)); } catch (e) {}
+  }
+  let profs = [];
+
+  document.getElementById("prof-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const nom = document.getElementById("pr-nom").value.trim();
+    const matiere = document.getElementById("pr-matiere").value.trim();
+    const contact = document.getElementById("pr-contact").value.trim();
+    if (!nom) return;
+    profs.push({ id: "pr" + Date.now().toString(36), nom, matiere, contact });
+    saveProfs(profs);
+    e.target.reset();
+    renderProfs();
+    refreshDatalists();
+  });
+
+  function renderProfs() {
+    const container = document.getElementById("profs-list");
+    container.innerHTML = "";
+    if (profs.length === 0) {
+      container.innerHTML = '<div class="empty-state"><div class="big">Répertoire vide</div><p>Ajoute les professeurs de l\'année.</p></div>';
+      return;
+    }
+    profs.forEach((p) => {
+      const row = document.createElement("div");
+      row.className = "prof-item";
+      const left = document.createElement("div");
+      left.innerHTML = `<div class="prof-name">${escapeHtml(p.nom)}</div><div class="prof-matiere">${escapeHtml(p.matiere || "—")}${p.contact ? " · " + escapeHtml(p.contact) : ""}</div>`;
+      row.appendChild(left);
+      const del = document.createElement("button");
+      del.type = "button";
+      del.className = "icon-btn danger";
+      del.textContent = "Supprimer";
+      del.addEventListener("click", () => {
+        profs = profs.filter((x) => x.id !== p.id);
+        saveProfs(profs);
+        renderProfs();
+        refreshDatalists();
+      });
+      row.appendChild(del);
+      container.appendChild(row);
+    });
+  }
+
+  function refreshDatalists() {
+    const profList = document.getElementById("prof-list");
+    const matiereList = document.getElementById("matiere-list");
+    profList.innerHTML = "";
+    matiereList.innerHTML = "";
+    const seenMatieres = new Set();
+    profs.forEach((p) => {
+      const opt = document.createElement("option");
+      opt.value = p.nom;
+      profList.appendChild(opt);
+      if (p.matiere && !seenMatieres.has(p.matiere)) {
+        seenMatieres.add(p.matiere);
+        const mopt = document.createElement("option");
+        mopt.value = p.matiere;
+        matiereList.appendChild(mopt);
+      }
+    });
+  }
+
+  /* ================================================================
+     Feuille de mise au net
+     ================================================================ */
 
   const sheetSelect = document.getElementById("sheet-select");
   const sheetBody = document.getElementById("sheet-body");
@@ -1011,25 +1689,16 @@ form.entry-form {
   const sheetClasse = document.getElementById("sheet-classe");
   const sheetEcole = document.getElementById("sheet-ecole");
 
-  /* --- Profil élève (Nom / Prénom / Classe / École), partagé par toutes les feuilles --- */
-
-  const PROFILE_KEY = "carnet-lecons-profil-v1";
-
-  function loadProfile() {
+  function loadStudentInfo() {
     try {
-      const raw = localStorage.getItem(PROFILE_KEY);
+      const raw = localStorage.getItem(storageKey("studentinfo"));
       return raw ? JSON.parse(raw) : { nom: "", prenom: "", classe: "", ecole: "" };
     } catch (e) {
       return { nom: "", prenom: "", classe: "", ecole: "" };
     }
   }
-
-  function saveProfile(profile) {
-    try {
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-    } catch (e) {
-      console.error("Profil non enregistré", e);
-    }
+  function saveStudentInfo(info) {
+    try { localStorage.setItem(storageKey("studentinfo"), JSON.stringify(info)); } catch (e) {}
   }
 
   const profileInputs = {
@@ -1040,29 +1709,30 @@ form.entry-form {
   };
 
   function refreshStudentHeader() {
-    const p = loadProfile();
+    const p = loadStudentInfo();
     sheetNom.textContent = p.nom || "—";
     sheetPrenom.textContent = p.prenom || "—";
     sheetClasse.textContent = p.classe || "—";
     sheetEcole.textContent = p.ecole || "—";
   }
 
-  (function initProfile() {
-    const p = loadProfile();
+  function initStudentInfoInputs() {
+    const p = loadStudentInfo();
     profileInputs.nom.value = p.nom || "";
     profileInputs.prenom.value = p.prenom || "";
     profileInputs.classe.value = p.classe || "";
     profileInputs.ecole.value = p.ecole || "";
-    Object.entries(profileInputs).forEach(([key, input]) => {
-      input.addEventListener("input", () => {
-        const current = loadProfile();
-        current[key] = input.value;
-        saveProfile(current);
-        refreshStudentHeader();
-      });
-    });
     refreshStudentHeader();
-  })();
+  }
+
+  Object.entries(profileInputs).forEach(([key, input]) => {
+    input.addEventListener("input", () => {
+      const current = loadStudentInfo();
+      current[key] = input.value;
+      saveStudentInfo(current);
+      refreshStudentHeader();
+    });
+  });
 
   function populateSheetPicker() {
     const devoirs = entries.filter((e) => e.type === "devoir");
@@ -1119,10 +1789,277 @@ form.entry-form {
     window.print();
   });
 
+  /* ================================================================
+     Bilan / tableau de bord (+ export Word)
+     ================================================================ */
+
+  function computeStats() {
+    const lecons = entries.filter((e) => e.type === "lecon");
+    const devoirs = entries.filter((e) => e.type === "devoir");
+    const leconsSues = lecons.filter((e) => e.leconSue).length;
+    const devoirsRemis = devoirs.filter((e) => e.devoirRemis).length;
+    const devoirsRediges = devoirs.filter((e) => e.devoirRedige).length;
+    const enRetard = devoirs.filter(isLate).length;
+    const notes = entries.map((e) => parseFloat(e.note)).filter((n) => !isNaN(n));
+    const moyenne = notes.length ? (notes.reduce((a, b) => a + b, 0) / notes.length) : null;
+    return {
+      totalLecons: lecons.length,
+      leconsSues,
+      pctLeconsSues: lecons.length ? Math.round(100 * leconsSues / lecons.length) : 0,
+      totalDevoirs: devoirs.length,
+      devoirsRemis,
+      pctDevoirsRemis: devoirs.length ? Math.round(100 * devoirsRemis / devoirs.length) : 0,
+      devoirsRediges,
+      enRetard,
+      moyenne
+    };
+  }
+
+  function renderBilan() {
+    const s = computeStats();
+    const grid = document.getElementById("stat-grid");
+    const cards = [
+      [s.totalLecons, "Leçons notées"],
+      [s.pctLeconsSues + "%", "Leçons sues"],
+      [s.totalDevoirs, "Devoirs notés"],
+      [s.pctDevoirsRemis + "%", "Devoirs remis"],
+      [s.enRetard, "Devoirs en retard"],
+      [s.moyenne !== null ? s.moyenne.toFixed(1) : "—", "Moyenne des notes"]
+    ];
+    grid.innerHTML = "";
+    cards.forEach(([value, label]) => {
+      const card = document.createElement("div");
+      card.className = "stat-card";
+      card.innerHTML = `<div class="stat-value">${value}</div><div class="stat-label">${label}</div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById("bilan-download").addEventListener("click", () => {
+    const s = computeStats();
+    const info = loadStudentInfo();
+    const rows = entries
+      .slice()
+      .sort((a, b) => (a.dateRemise || "9999").localeCompare(b.dateRemise || "9999"))
+      .map((e) => `<tr>
+        <td>${escapeHtml(e.type === "devoir" ? "Devoir" : "Leçon")}</td>
+        <td>${escapeHtml(e.livre || "")}</td>
+        <td>${escapeHtml(e.matiere || "")}</td>
+        <td>${escapeHtml(e.professeur || "")}</td>
+        <td>${fmtDate(e.dateRemise)}</td>
+        <td>${escapeHtml(e.note || "")}</td>
+        <td>${e.type === "devoir" ? (e.devoirRemis ? "Remis" : "Non remis") : (e.leconSue ? "Sue" : "Non sue")}</td>
+      </tr>`).join("");
+
+    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset="utf-8"><title>Bilan</title></head>
+<body style="font-family:Georgia,serif;color:#263241;">
+  <h1 style="color:#1F2E52;">Tableau de bord — Carnet de leçons</h1>
+  <p><strong>Élève :</strong> ${escapeHtml(info.prenom || "")} ${escapeHtml(info.nom || "")}<br>
+     <strong>Classe :</strong> ${escapeHtml(info.classe || "—")}<br>
+     <strong>École :</strong> ${escapeHtml(info.ecole || "—")}</p>
+  <table border="0" cellpadding="6" style="border-collapse:collapse;margin:16px 0;">
+    <tr><td><strong>Leçons notées</strong></td><td>${s.totalLecons}</td></tr>
+    <tr><td><strong>Leçons sues</strong></td><td>${s.pctLeconsSues}%</td></tr>
+    <tr><td><strong>Devoirs notés</strong></td><td>${s.totalDevoirs}</td></tr>
+    <tr><td><strong>Devoirs remis</strong></td><td>${s.pctDevoirsRemis}%</td></tr>
+    <tr><td><strong>Devoirs en retard</strong></td><td>${s.enRetard}</td></tr>
+    <tr><td><strong>Moyenne des notes</strong></td><td>${s.moyenne !== null ? s.moyenne.toFixed(1) : "—"}</td></tr>
+  </table>
+  <h2 style="color:#1F2E52;">Détail</h2>
+  <table border="1" cellpadding="6" style="border-collapse:collapse;width:100%;font-size:13px;">
+    <tr style="background:#2E4374;color:#fff;">
+      <th>Type</th><th>Livre</th><th>Matière</th><th>Professeur</th><th>Date</th><th>Note</th><th>Statut</th>
+    </tr>
+    ${rows}
+  </table>
+</body></html>`;
+
+    const blob = new Blob(["\ufeff", html], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bilan-carnet-de-lecons.doc";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 4000);
+  });
+
+  /* ================================================================
+     Rappels automatiques (notifications)
+     ================================================================ */
+
+  function notifiedKey() { return storageKey("notified"); }
+
+  function loadNotified() {
+    try {
+      const raw = localStorage.getItem(notifiedKey());
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) { return {}; }
+  }
+  function saveNotified(map) {
+    try { localStorage.setItem(notifiedKey(), JSON.stringify(map)); } catch (e) {}
+  }
+
+  function checkReminders() {
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const notified = loadNotified();
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today); tomorrow.setDate(today.getDate() + 1);
+
+    entries.forEach((entry) => {
+      if (entry.type !== "devoir" || !entry.rappel || entry.devoirRemis || !entry.dateRemise) return;
+      const due = new Date(entry.dateRemise + "T00:00:00");
+      const isTomorrow = due.getTime() === tomorrow.getTime();
+      const isToday = due.getTime() === today.getTime();
+      if (!isTomorrow && !isToday) return;
+      const notifKey = entry.id + ":" + todayStr;
+      if (notified[notifKey]) return;
+      try {
+        new Notification("Carnet de leçons", {
+          body: (isToday ? "À rendre aujourd'hui : " : "À rendre demain : ") + (entry.livre || "Devoir") + (entry.matiere ? " (" + entry.matiere + ")" : ""),
+          icon: "./icon-192.png"
+        });
+      } catch (e) {}
+      notified[notifKey] = true;
+    });
+    saveNotified(notified);
+  }
+
+  const reminderBanner = document.getElementById("reminder-banner");
+  function refreshReminderBanner() {
+    if ("Notification" in window && Notification.permission === "default") {
+      reminderBanner.style.display = "flex";
+    } else {
+      reminderBanner.style.display = "none";
+    }
+  }
+  document.getElementById("reminder-enable-btn").addEventListener("click", () => {
+    if (!("Notification" in window)) {
+      alert("Les notifications ne sont pas prises en charge sur cet appareil.");
+      return;
+    }
+    Notification.requestPermission().then(() => {
+      refreshReminderBanner();
+      checkReminders();
+    });
+  });
+
+  setInterval(checkReminders, 5 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") checkReminders();
+  });
+
+  /* ================================================================
+     Maître Enock — assistant IA (clé API personnelle, optionnelle)
+     ================================================================ */
+
+  const AI_KEY_STORAGE = "carnet-lecons-ai-key-v1"; // clé partagée par l'appareil (pas par profil)
+
+  const aiKeyInput = document.getElementById("ai-key");
+  aiKeyInput.value = localStorage.getItem(AI_KEY_STORAGE) || "";
+  aiKeyInput.addEventListener("change", () => {
+    try { localStorage.setItem(AI_KEY_STORAGE, aiKeyInput.value.trim()); } catch (e) {}
+  });
+
+  document.getElementById("ai-copy").addEventListener("click", () => {
+    const text = document.getElementById("ai-input").value;
+    if (!text.trim()) return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById("ai-copy");
+      const old = btn.textContent;
+      btn.textContent = "Copié ✓";
+      setTimeout(() => (btn.textContent = old), 1500);
+    }).catch(() => alert("Copie impossible sur ce navigateur — sélectionne et copie le texte manuellement."));
+  });
+
+  document.getElementById("ai-open-claude").addEventListener("click", () => {
+    window.open("https://claude.ai/new", "_blank");
+  });
+
+  document.getElementById("ai-generate").addEventListener("click", async () => {
+    const text = document.getElementById("ai-input").value.trim();
+    const key = aiKeyInput.value.trim();
+    const answerBox = document.getElementById("ai-answer");
+    const btn = document.getElementById("ai-generate");
+
+    if (!text) { alert("Colle d'abord le texte du devoir."); return; }
+    if (!key) { alert("Ajoute ta clé API Anthropic ci-dessus pour utiliser cette fonction."); return; }
+
+    btn.disabled = true;
+    const oldLabel = btn.textContent;
+    btn.textContent = "Maître Enock réfléchit...";
+    answerBox.style.display = "block";
+    answerBox.textContent = "Génération en cours...";
+
+    try {
+      const info = loadStudentInfo();
+      const systemPrompt = "Tu es Maître Enock, un professeur patient et bienveillant qui aide un élève"
+        + (info.classe ? " de " + info.classe : "") + " à rédiger ses devoirs en français. "
+        + "Pour chaque question posée, donne une réponse claire et correcte, accompagnée d'une courte explication pédagogique. "
+        + "Réponds en français, de façon structurée (une réponse par question), sans être condescendant.";
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": key,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-5",
+          max_tokens: 1500,
+          system: systemPrompt,
+          messages: [{ role: "user", content: text }]
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        const msg = (data && data.error && data.error.message) || "Erreur inconnue.";
+        answerBox.textContent = "Erreur : " + msg;
+      } else {
+        const parts = (data.content || []).filter((c) => c.type === "text").map((c) => c.text);
+        answerBox.textContent = parts.join("\n\n") || "(Réponse vide)";
+      }
+    } catch (err) {
+      answerBox.textContent = "Erreur de connexion. Vérifie ta connexion internet et ta clé API.";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = oldLabel;
+    }
+  });
+
+  /* ================================================================
+     Chargement / rechargement des données par profil
+     ================================================================ */
+
+  function reloadAllData() {
+    entries = loadEntries();
+    schedule = loadSchedule();
+    profs = loadProfs();
+    initStudentInfoInputs();
+    refreshDatalists();
+    renderList();
+    renderSchedule();
+    renderProfs();
+    renderBilan();
+    populateSheetPicker();
+    loadSheet("");
+    refreshReminderBanner();
+    checkReminders();
+  }
+
   /* ---------------- Init ---------------- */
 
+  ensureProfiles();
+  renderProfileSelect();
+  reloadAllData();
   showView("accueil");
-  renderList();
 
   /* ---------------- Service worker ---------------- */
 
